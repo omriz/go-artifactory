@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
 )
 
@@ -108,4 +109,13 @@ func (s *ArtifactService) DeleteRepositoryReplicationConfig(ctx context.Context,
 		return nil, err
 	}
 	return s.client.Do(ctx, req, nil)
+}
+
+func (s *ArtifactService) RetrieveArtifact(ctx context.Context, repoKey string, output io.Writer) (*http.Response, error) {
+	path := fmt.Sprintf("%s", repoKey)
+	req, err := s.client.NewRequest("GET", path, nil)
+	if err != nil {
+		return nil, err
+	}
+	return s.client.Do(ctx, req, output)
 }
